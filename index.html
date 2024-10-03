@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Head Tracking</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #370f0f;
+        perspective: 1000px; /* Menambahkan perspektif 3D */
+      }
+
+      .head {
+        width: 300px; /* Menggunakan lebar penuh dari container */
+        transition: transform 0.1s; /* Menambahkan transisi halus */
+        border-radius: 40px;
+      }
+
+      .side {
+        width: 200px;
+        position: absolute; /* Memungkinkan penggunaan top/bottom */
+        transition: top 0.5s ease; /* Transisi untuk gerakan halus */
+        top: 50%; /* Posisi awal */
+        left: 0;
+      }
+      .right {
+        width: 200px;
+        position: absolute; /* Memungkinkan penggunaan top/bottom */
+        transition: top 0.5s ease; /* Transisi untuk gerakan halus */
+        top: 50%; /* Posisi awal */
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="yes.png" alt="" class="side" id="leftSide" />
+    <video src="p.mp4" loop controls id="head" class="head"></video>
+    <img src="yes.png" alt="" class="right" id="rightSide" />
+
+    <script>
+      const head = document.getElementById("head");
+
+      document.addEventListener("mousemove", (event) => {
+        // Dapatkan posisi mouse relatif terhadap jendela
+        const { clientX, clientY } = event;
+        const { innerWidth, innerHeight } = window;
+
+        // Hitung persentase posisi mouse
+        const xPercent = (clientX / innerWidth) * 2 - 1; // Rentang -1 ke 1
+        const yPercent = (clientY / innerHeight) * 2 - 1; // Rentang -1 ke 1
+
+        // Terapkan transformasi ke gambar kepala
+        head.style.transform = `rotateY(${xPercent * 30}deg) rotateX(${-yPercent * 30}deg)`;
+      });
+
+      const leftSide = document.getElementById("leftSide");
+      const rightSide = document.getElementById("rightSide");
+      let position = 0; // Posisi awal
+
+      setInterval(() => {
+        // Update posisi
+        if (position === 0) {
+          position = 100; // Naik 100px
+        } else {
+          position = 0; // Kembali ke posisi awal
+        }
+        leftSide.style.top = `${position}px`; // Terapkan posisi ke elemen kiri
+        rightSide.style.top = `${position}px`; // Terapkan posisi ke elemen kanan
+      }, 1000); // Setiap 1000ms (1 detik)
+    </script>
+  </body>
+</html>
